@@ -1,7 +1,7 @@
 
 # Github Top Language Tool
 
-Made for anyone who uses Github.  This tool allows the lookup of a user and his top languages used in repos.  This data can be exported to a json file or as a graph.
+Made for anyone who uses Github.  This tool allows the lookup of a user and his top languages used in repos or gists.  This data can be exported to a json file or as a graph.
 
 ## Settings Usage
 

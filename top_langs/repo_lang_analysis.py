@@ -1,10 +1,7 @@
 from collections import defaultdict
-from pathlib import Path
 import requests
-import matplotlib.pyplot as plt
 import json
-import sys
-import grapher
+from . import grapher
 
 
 # ------------------------
