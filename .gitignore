@@ -6,3 +6,8 @@ trending_repos/*.txt
 
 top_langs/output.json
 top_langs/*.png
+
+__pycache__/
+*.pyc
+top_langs/__pycache__/
+trending_repos/__pycache__/

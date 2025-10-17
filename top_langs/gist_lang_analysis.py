@@ -14,19 +14,21 @@ def fetch_new_langs(username: str, save_path: str = None, token : str=None):
     page = 1
 
     while True:
-        repos_url = f"https://api.github.com/users/{username}/repos?per_page=100&page={page}"
+        repos_url = f"https://api.github.com/users/{username}/gists?per_page=100&page={page}"
 
-        repos = requests.get(repos_url, headers=headers).json()
-        if isinstance(repos, dict) and repos.get("message"):
-            raise Exception(f"Error fetching repos: {repos['message']}")
-        if not repos:
-            break # if there are no remaining repos
+        gists = requests.get(repos_url, headers=headers).json()
+        if isinstance(gists, dict) and gists.get("message"):
+            raise Exception(f"Error fetching repos: {gists['message']}")
+        if not gists:
+            break # if there are no remaining gists
 
-        for repo in repos:
-            langs_url = repo["languages_url"]
-            langs = requests.get(langs_url, headers=headers).json()
-            for lang, count in langs.items():
-                lang_totals[lang] += count
+        for gist in gists:
+            files = gist.get("files", {})
+            for file_info in files.values():
+                lang = file_info.get("language")
+                size = file_info.get("size", 0)
+                if lang:
+                    lang_totals[lang] += size
 
         page += 1
 
@@ -78,7 +80,7 @@ def run():
     lang_data = get_lang_data(use_data_setting, username_setting, token_setting, data_save_path, chart_save_path_setting)
 
     print("[LOG] Creating Chart")
-    fig, ax = grapher.create_chart(chart_type_setting, username_setting, "repo", lang_data, minimum_percentage_setting, donut_hole_width_setting, color_file_path)
+    fig, ax = grapher.create_chart(chart_type_setting, username_setting, "gist", lang_data, minimum_percentage_setting, donut_hole_width_setting, color_file_path)
 
     print("[LOG] Sharing Chart")
     grapher.output_chart(output_option_setting, image_save_path_setting, fig)
@@ -90,4 +92,3 @@ def run():
 
 if __name__ == "__main__":
     run()
-# TODO better documentation, comment entire program
