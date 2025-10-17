@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, send_file
 from flask_restful import Resource, Api
 from trending_repos import scraper
-from top_langs import repo_lang_analysis
+from top_langs import repo_lang_analysis, grapher
 from pathlib import Path
 import io
 
@@ -39,7 +39,7 @@ class RepoTopLangs(Resource):
         elif output_type == "graph":
             cfp = Path(__file__).resolve().parent / "top_langs" / "lang_colors.json"
             print(cfp)
-            fig, _ = repo_lang_analysis.create_chart(
+            fig, _ = grapher.create_chart(
                 chart_type,
                 username,
                 lang_data,
