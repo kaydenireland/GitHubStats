@@ -67,7 +67,7 @@ def process_lang_data(lang_data: dict, color_file: str, min_pct: float = 0.015):
 # Chart Renderers
 # ------------------------
 
-def create_pie_chart(username: str, lang_data: dict, min_pct: float, color_file_path: str):
+def create_pie_chart(username: str, mode:str, lang_data: dict, min_pct: float, color_file_path: str):
     data = process_lang_data(lang_data, color_file_path, min_pct)
 
     total = sum(d["size"] for d in data)
@@ -80,10 +80,10 @@ def create_pie_chart(username: str, lang_data: dict, min_pct: float, color_file_
         loc="center left",
         bbox_to_anchor=(1, 0, 0.5, 1)
     )
-    ax.set_title(f"{username}'s Most Used Languages")
+    ax.set_title(f"{username}'s Most Used Languages{mode}")
     return fig, ax
 
-def create_donut_chart(username: str, lang_data: dict, min_pct: float, dh_width: float, color_file_path: str):
+def create_donut_chart(username: str, mode:str, lang_data: dict, min_pct: float, dh_width: float, color_file_path: str):
     data = process_lang_data(lang_data, color_file_path, min_pct)
 
     total = sum(d["size"] for d in data)
@@ -96,11 +96,11 @@ def create_donut_chart(username: str, lang_data: dict, min_pct: float, dh_width:
         loc="center left",
         bbox_to_anchor=(1, 0, 0.5, 1)
     )
-    ax.set_title(f"{username}'s Most Used Languages")
+    ax.set_title(f"{username}'s Most Used Languages{mode}")
     return fig, ax
 
 
-def create_vertical_bar_chart(username: str, lang_data: dict, min_pct: float, color_file_path: str):
+def create_vertical_bar_chart(username: str, mode:str, lang_data: dict, min_pct: float, color_file_path: str):
     data = process_lang_data(lang_data, color_file_path, min_pct)
     total = sum(d["size"] for d in data)
 
@@ -111,7 +111,7 @@ def create_vertical_bar_chart(username: str, lang_data: dict, min_pct: float, co
                   color=[d["color"] for d in data])
 
     ax.set_ylabel("Kilobytes")  # left axis label
-    ax.set_title(f"{username}'s Most Used Languages")
+    ax.set_title(f"{username}'s Most Used Languages{mode}")
 
     # Legend showing percentage
     ax.legend(bars, [f"{d['label']} - {d['size'] / total:.1%}" for d in data],
@@ -119,7 +119,7 @@ def create_vertical_bar_chart(username: str, lang_data: dict, min_pct: float, co
 
     return fig, ax
 
-def create_horizontal_bar_chart(username: str, lang_data: dict, min_pct: float, color_file_path: str):
+def create_horizontal_bar_chart(username: str, mode:str, lang_data: dict, min_pct: float, color_file_path: str):
     data = process_lang_data(lang_data, color_file_path, min_pct)
     total = sum(d["size"] for d in data)
 
@@ -130,7 +130,7 @@ def create_horizontal_bar_chart(username: str, lang_data: dict, min_pct: float, 
                    color=[d["color"] for d in data])
 
     ax.set_xlabel("Kilobytes")  # X-axis label
-    ax.set_title(f"{username}'s Most Used Languages")
+    ax.set_title(f"{username}'s Most Used Languages{mode}")
 
     # Legend showing percentage
     ax.legend(bars, [f"{d['label']} - {d['size']/total:.1%}" for d in data],
@@ -141,7 +141,7 @@ def create_horizontal_bar_chart(username: str, lang_data: dict, min_pct: float, 
 
     return fig, ax
 
-def create_stacked_chart(username: str, lang_data: dict, min_pct: float, color_file_path: str):
+def create_stacked_chart(username: str, mode:str, lang_data: dict, min_pct: float, color_file_path: str):
     data = process_lang_data(lang_data, color_file_path, min_pct)
     total = sum(d["size"] for d in data)
 
@@ -166,7 +166,7 @@ def create_stacked_chart(username: str, lang_data: dict, min_pct: float, color_f
     ax.set_xlim(0, 1)
     ax.set_yticks([])
     ax.set_xticks([])
-    ax.set_title(f"{username}'s Most Used Languages")
+    ax.set_title(f"{username}'s Most Used Languages{mode}")
     return fig, ax
 
 # ------------------------
@@ -187,17 +187,25 @@ def show_chart(fig):
 # Factory
 # ------------------------
 
-def create_chart(type: str, username: str, lang_data: dict, minimum_percentage: float, dh_width: float, color_file_path: str):
+def create_chart(type: str, username: str, mode:str, lang_data: dict, minimum_percentage: float, dh_width: float, color_file_path: str):
+
+    if mode == "repo":
+        mode = " (Repos)"
+    elif mode == "gist":
+        mode = " (Gists)"
+    else:
+        mode = ""
+
     if type == "pie":
-        fig, ax = create_pie_chart(username, lang_data, minimum_percentage, color_file_path)
+        fig, ax = create_pie_chart(username, mode, lang_data, minimum_percentage, color_file_path)
     elif type == "donut":
-        fig, ax = create_donut_chart(username, lang_data, minimum_percentage, dh_width, color_file_path)
+        fig, ax = create_donut_chart(username, mode, lang_data, minimum_percentage, dh_width, color_file_path)
     elif type == "vbar":
-        fig, ax = create_vertical_bar_chart(username, lang_data, minimum_percentage, color_file_path)
+        fig, ax = create_vertical_bar_chart(username, mode, lang_data, minimum_percentage, color_file_path)
     elif type == "hbar":
-        fig, ax = create_horizontal_bar_chart(username, lang_data, minimum_percentage, color_file_path)
+        fig, ax = create_horizontal_bar_chart(username, mode, lang_data, minimum_percentage, color_file_path)
     elif type == "stacked":
-        fig, ax = create_stacked_chart(username, lang_data, minimum_percentage, color_file_path)
+        fig, ax = create_stacked_chart(username, mode, lang_data, minimum_percentage, color_file_path)
     else:
         print("[LOG/ERROR] Invalid Chart Type (chart_type)")
         return

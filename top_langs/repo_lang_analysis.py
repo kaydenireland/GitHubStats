@@ -81,7 +81,7 @@ def run():
     lang_data = get_lang_data(use_data_setting, username_setting, token_setting, data_save_path, chart_save_path_setting)
 
     print("[LOG] Creating Chart")
-    fig, ax = grapher.create_chart(chart_type_setting, username_setting, lang_data, minimum_percentage_setting, donut_hole_width_setting, color_file_path)
+    fig, ax = grapher.create_chart(chart_type_setting, username_setting, "repo", lang_data, minimum_percentage_setting, donut_hole_width_setting, color_file_path)
 
     print("[LOG] Sharing Chart")
     grapher.output_chart(output_option_setting, image_save_path_setting, fig)
