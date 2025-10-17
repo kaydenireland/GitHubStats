@@ -1,7 +1,8 @@
 from collections import defaultdict
 import requests
 import json
-from top_langs import grapher
+from collections import Counter
+from top_langs import grapher, repo_lang_analysis, gist_lang_analysis
 
 
 # ------------------------
@@ -9,28 +10,12 @@ from top_langs import grapher
 # ------------------------
 
 def fetch_new_langs(username: str, save_path: str = None, token : str=None):
-    headers = {"Authorization": f"token {token}"} if token else {}
-    lang_totals = defaultdict(int)
-    page = 1
 
-    while True:
-        repos_url = f"https://api.github.com/users/{username}/repos?per_page=100&page={page}"
+    repo_data = repo_lang_analysis.fetch_new_langs(username, save_path, token)
+    gist_data = gist_lang_analysis.fetch_new_langs(username, save_path, token)
 
-        repos = requests.get(repos_url, headers=headers).json()
-        if isinstance(repos, dict) and repos.get("message"):
-            raise Exception(f"Error fetching repos: {repos['message']}")
-        if not repos:
-            break # if there are no remaining repos
-
-        for repo in repos:
-            langs_url = repo["languages_url"]
-            langs = requests.get(langs_url, headers=headers).json()
-            for lang, count in langs.items():
-                lang_totals[lang] += count
-
-        page += 1
-
-    lang_data =  dict(sorted(lang_totals.items(), key=lambda x: x[1], reverse=True))
+    lang_data = dict(Counter(repo_data) + Counter(gist_data))
+    lang_data = dict(sorted(lang_data.items(), key=lambda x: x[1], reverse=True))
     grapher.save_to_json(lang_data, save_path)
     return lang_data
 
@@ -46,8 +31,6 @@ def get_lang_data(use_data: str, username: str, token: str, data_save_path: str,
     else:
         print("[LOG/ERROR] Invalid Data Selection (use_data)")
     return lang_data
-
-
 
 def run():
     print("[LOG] Starting Script. See README for Settings Help")
@@ -78,7 +61,7 @@ def run():
     lang_data = get_lang_data(use_data_setting, username_setting, token_setting, data_save_path, chart_save_path_setting)
 
     print("[LOG] Creating Chart")
-    fig, ax = grapher.create_chart(chart_type_setting, username_setting, "repo", lang_data, minimum_percentage_setting, donut_hole_width_setting, color_file_path)
+    fig, ax = grapher.create_chart(chart_type_setting, username_setting, "all", lang_data, minimum_percentage_setting, donut_hole_width_setting, color_file_path)
 
     print("[LOG] Sharing Chart")
     grapher.output_chart(output_option_setting, image_save_path_setting, fig)
@@ -90,4 +73,3 @@ def run():
 
 if __name__ == "__main__":
     run()
-# TODO better documentation, comment entire program

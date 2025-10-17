@@ -1,7 +1,7 @@
 from collections import defaultdict
 import requests
 import json
-from . import grapher
+from top_langs import grapher
 
 
 # ------------------------
