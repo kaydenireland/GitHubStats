@@ -32,6 +32,7 @@ class TopLangs(Resource):
 
         chart_type = request.args.get("chart", "donut") # pie, donut, vbar, hbar, stacked
         output_type = request.args.get("output", "json") # json, graph
+        max_langs = request.args.get("max", "6")
 
         if output_type == "json":
             return jsonify(lang_data)
@@ -44,6 +45,7 @@ class TopLangs(Resource):
                 username,
                 "all",
                 lang_data,
+                int(max_langs),
                 minimum_percentage = .005,
                 dh_width = .3,
                 color_file_path = cfp
@@ -65,6 +67,7 @@ class RepoTopLangs(Resource):
 
         chart_type = request.args.get("chart", "donut") # pie, donut, vbar, hbar, stacked
         output_type = request.args.get("output", "json") # json, graph
+        max_langs = request.args.get("max", "6")
 
         if output_type == "json":
             return jsonify(lang_data)
@@ -77,6 +80,7 @@ class RepoTopLangs(Resource):
                 username,
                 "repo",
                 lang_data,
+                int(max_langs),
                 minimum_percentage = .005,
                 dh_width = .3,
                 color_file_path = cfp
@@ -98,6 +102,7 @@ class GistTopLangs(Resource):
 
         chart_type = request.args.get("chart", "donut") # pie, donut, vbar, hbar, stacked
         output_type = request.args.get("output", "json") # json, graph
+        max_langs = request.args.get("max", "6")
 
         if output_type == "json":
             return jsonify(lang_data)
@@ -110,6 +115,7 @@ class GistTopLangs(Resource):
                 username,
                 "gist",
                 lang_data,
+                int(max_langs),
                 minimum_percentage = .005,
                 dh_width = .3,
                 color_file_path = cfp
@@ -131,3 +137,6 @@ api.add_resource(Trending, "/trending/")
 api.add_resource(TopLangs, "/toplangs/<string:username>")
 api.add_resource(RepoTopLangs, "/toplangs/repo/<string:username>")
 api.add_resource(GistTopLangs, "/toplangs/gist/<string:username>")
+
+#if __name__ == "__main__":
+#    app.run(debug=True)

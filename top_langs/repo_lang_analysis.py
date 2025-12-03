@@ -67,6 +67,7 @@ def run():
     data_save_path = base_dir / settings["json_save_path"]
     chart_save_path_setting = base_dir / settings["json_save_path"]
     use_data_setting = settings["use_data"]
+    max_langs_setting = settings["max_langs"]
     minimum_percentage_setting = settings["minimum_percentage"]
     chart_type_setting = settings["chart_type"]
     donut_hole_width_setting = settings["donut_hole_width"]
@@ -78,7 +79,7 @@ def run():
     lang_data = get_lang_data(use_data_setting, username_setting, token_setting, data_save_path, chart_save_path_setting)
 
     print("[LOG] Creating Chart")
-    fig, ax = grapher.create_chart(chart_type_setting, username_setting, "repo", lang_data, minimum_percentage_setting, donut_hole_width_setting, color_file_path)
+    fig, ax = grapher.create_chart(chart_type_setting, username_setting, "repo", lang_data, max_langs_setting, minimum_percentage_setting, donut_hole_width_setting, color_file_path)
 
     print("[LOG] Sharing Chart")
     grapher.output_chart(output_option_setting, image_save_path_setting, fig)

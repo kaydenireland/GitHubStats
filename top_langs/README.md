@@ -24,6 +24,7 @@ Examples with these settings can be found below or in the examples folder.
   "chart_type": "donut",
   "donut_hole_width": 0.3,
 
+  "max_langs": 6,
 
   "output_option": "save",
   "image_save_path": "chart.png",
@@ -51,6 +52,7 @@ Examples with these settings can be found below or in the examples folder.
   "chart_type": "stacked",
   "donut_hole_width": 0.3,
 
+  "max_langs": 6,
 
   "output_option": "save",
   "image_save_path": "chart.png",
